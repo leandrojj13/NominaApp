@@ -1,0 +1,11 @@
+.DS_Store
+node_modules/
+dist/
+coverage/
+src/css
+src/**/*.js
+src/**/*.map
+*.log
+!src/assets/js/front.js
+!src/assets/js/jquery.min.js
+/.vs

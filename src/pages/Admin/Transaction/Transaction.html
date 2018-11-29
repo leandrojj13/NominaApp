@@ -1,0 +1,133 @@
+<b-row class="p-4">
+    <b-col>
+        <div class="card">
+            <div class="card-close">
+                <div class="dropdown">
+                    <button type="button" id="closeCard1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                        class="dropdown-toggle"><i class="fa fa-ellipsis-v"></i></button>
+                    <div aria-labelledby="closeCard1" class="dropdown-menu dropdown-menu-right has-shadow">
+                        <a href="#" class="dropdown-item remove">
+                            <i class="fa fa-times"></i> Cerrar
+                        </a>
+                        <a href="#" class="dropdown-item edit">
+                            <i class="fa fa-gear"></i> Editar
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-header d-flex align-items-center">
+                <h3 class="h4">Transacciones</h3>
+            </div>
+            <div class="card-body">
+                <form>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="form-control-label">Empleados </label>
+                                <multiselect v-model="model.employeeObj" deselect-label="No puedes remover" track-by="id"
+                                    label="name" placeholder="Selecciona" :options="employees" :searchable="false"
+                                    :allow-empty="false">
+                                    <template slot="singleLabel" slot-scope="{ option }"><strong>{{ option.name }}</strong>
+                                        <strong> ({{ option.identification }})</strong></template>
+                                </multiselect>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="form-control-label">Tipo de transacción </label>
+                                <multiselect v-model="valueTipoTransaccion" deselect-label="No puedes remover" track-by="id"
+                                    label="name" placeholder="Selecciona" :options="optionsTipoTransaccion" :searchable="false"
+                                    :allow-empty="false">
+                                </multiselect>
+                            </div>
+                        </div>
+                        <div class="col-sm-6" v-if="valueTipoTransaccion && valueTipoTransaccion.id == 1">
+                            <div class="form-group">
+                                <label class="form-control-label">Tipo de deducción </label>
+                                <multiselect v-model="model.deduccionObj" deselect-label="No puedes remover" track-by="id"
+                                    label="name" placeholder="Selecciona" :options="deducciones" :searchable="false"
+                                    :allow-empty="false">
+                                </multiselect>
+                            </div>
+                        </div>
+                        <div class="col-sm-6" v-else>
+                            <div class="form-group">
+                                <label class="form-control-label">Tipo de entrada </label>
+                                <multiselect v-model="model.entradaObj" deselect-label="No puedes remover" track-by="id"
+                                    label="name" placeholder="Selecciona" :options="entradas" :searchable="false"
+                                    :allow-empty="false">
+                                </multiselect>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="form-control-label">Fecha </label>
+                                <input type="date" v-model="model.date" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="form-control-label">Cantidad </label>
+                                <input type="number" v-model="model.amount" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <b-button variant="primary" @click="saveData()"> Guardar </b-button>
+                        <b-button class="pull-right" variant="default" @click="cleanModel()"> Limpiar </b-button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+    </b-col>
+    <b-col cols="12">
+        <div class="card">
+            <div class="card-close">
+                <div class="dropdown">
+                    <button type="button" id="closeCard2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                        class="dropdown-toggle"><i class="fa fa-ellipsis-v"></i></button>
+                    <div aria-labelledby="closeCard2" class="dropdown-menu dropdown-menu-right has-shadow"><a href="#"
+                            class="dropdown-item remove"> <i class="fa fa-times"></i>Close</a><a href="#" class="dropdown-item edit">
+                            <i class="fa fa-gear"></i>Edit</a></div>
+                </div>
+            </div>
+            <div class="card-header d-flex align-items-center">
+                <h3 class="h4">Tipos de ingresos Agregados</h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Fecha</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(transaction, $index) in transactions">
+                                <th scope="row">{{$index + 1}}</th>
+                                <td>{{transaction.date}}</td>
+                                <td>@ <b-btn variant="info" size="sm" @click.stop="mapTransaction(transaction)">Editar</b-btn>
+                                    <b-btn variant="danger" size="sm" @click.stop="deleteData(transaction)">Borrar</b-btn>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- <b-table empty-text="No hay registros" empty-filtered-text="No hay registros coincidientes" show-empty striped hover :items="getTableInformation" :fields="fields">
+                  <template slot="acciones" slot-scope="cell">
+                    <b-btn variant="info" size="sm" @click.stop="editar(cell.item,cell.index,$event.target)">Editar</b-btn>
+                    <b-btn variant="danger" size="sm" @click.stop="borrar(cell.item,cell.index,$event.target)">Borrar</b-btn>
+                  </template>
+                  
+                </b-table> -->
+                </div>
+            </div>
+        </div>
+    </b-col>
+</b-row>

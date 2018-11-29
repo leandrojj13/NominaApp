@@ -1,0 +1,118 @@
+<b-row class="p-4">
+  <b-col>
+    <div class="card">
+      <div class="card-close">
+        <div class="dropdown">
+          <button type="button" id="closeCard1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"><i
+              class="fa fa-ellipsis-v"></i></button>
+          <div aria-labelledby="closeCard1" class="dropdown-menu dropdown-menu-right has-shadow">
+            <a href="#" class="dropdown-item remove">
+              <i class="fa fa-times"></i> Cerrar
+            </a>
+            <a href="#" class="dropdown-item edit">
+              <i class="fa fa-gear"></i> Editar
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="card-header d-flex align-items-center">
+        <h3 class="h4">Mantenimiento de Empleados</h3>
+      </div>
+      <div class="card-body">
+        <form>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label class="form-control-label">Nombre </label>
+                <input type="text" v-model="model.name" class="form-control">
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label class="form-control-label">Identificación </label>
+                <input type="text" v-model="model.identification" class="form-control">
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label class="form-control-label">Departamento </label>
+                <input type="text" v-model="model.department" class="form-control">
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label class="form-control-label">Puesto </label>
+                <input type="text" v-model="model.jobTitle" class="form-control">
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label class="form-control-label">Salario </label>
+                <input type="number" v-model="model.montSalary" class="form-control">
+              </div>
+            </div>
+
+          </div>
+
+          <div class="form-group">
+            <b-button variant="primary" @click="saveData()"> Guardar </b-button>
+            <b-button class="pull-right" variant="default" @click="cleanModel()"> Limpiar </b-button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+
+  </b-col>
+  <b-col cols="12">
+    <div class="card">
+      <div class="card-close">
+        <div class="dropdown">
+          <button type="button" id="closeCard2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"><i
+              class="fa fa-ellipsis-v"></i></button>
+          <div aria-labelledby="closeCard2" class="dropdown-menu dropdown-menu-right has-shadow"><a href="#" class="dropdown-item remove">
+              <i class="fa fa-times"></i>Close</a><a href="#" class="dropdown-item edit"> <i class="fa fa-gear"></i>Edit</a></div>
+        </div>
+      </div>
+      <div class="card-header d-flex align-items-center">
+        <h3 class="h4">Tipos de empleados Agregados</h3>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Identificacion</th>
+                <th scope="col">Departamento</th>
+                <th scope="col">Puesto</th>
+                <th scope="col">Salario</th>
+                <th scope="col">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(employee, $index) in employees">
+                <th scope="row">{{$index + 1}}</th>
+                <td>{{employee.name}}</td>
+                <td>{{employee.department}}</td>
+                <td>{{employee.jobTitle}}</td>
+                <td>{{employee.montSalary}}</td>
+                <td>@ <b-btn variant="info" size="sm" @click.stop="mapEmployee(employee)">Editar</b-btn>
+                  <b-btn variant="danger" size="sm" @click.stop="deleteData(employee)">Borrar</b-btn>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <!-- <b-table empty-text="No hay registros" empty-filtered-text="No hay registros coincidientes" show-empty striped hover :items="getTableInformation" :fields="fields">
+              <template slot="acciones" slot-scope="cell">
+                <b-btn variant="info" size="sm" @click.stop="editar(cell.item,cell.index,$event.target)">Editar</b-btn>
+                <b-btn variant="danger" size="sm" @click.stop="borrar(cell.item,cell.index,$event.target)">Borrar</b-btn>
+              </template>
+              
+            </b-table> -->
+        </div>
+      </div>
+    </div>
+  </b-col>
+</b-row>

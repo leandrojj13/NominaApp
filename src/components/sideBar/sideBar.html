@@ -1,0 +1,21 @@
+<nav class="side-navbar">
+  <!-- Sidebar Header-->
+  <div class="sidebar-header d-flex align-items-center">
+    <div class="title">
+      <h1 class="h4">Leandro Jimenez</h1>
+      <p>Adminstrador</p>
+    </div>
+  </div>
+  <span class="heading">Páginas</span>
+  <ul class="list-unstyled">
+    <li
+        v-for="link in links"
+        :class="{active: currentPage == link.path}">
+          <router-link
+                       :to="link.path">
+          <i :class="link.icon"></i>
+          {{link.name}}
+          </router-link>
+    </li>
+  </ul>
+</nav>
