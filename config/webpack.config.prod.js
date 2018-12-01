@@ -1,127 +1,191 @@
-const CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin')
-const UglifyJsPlugin = require('webpack/lib/optimize/UglifyJsPlugin')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const CompressionPlugin = require('compression-webpack-plugin')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const FaviconsWebpackPlugin = require('favicons-webpack-plugin')
-const autoprefixer = require('autoprefixer')
-const webpackConfig = require('./webpack.config.base')
-const helpers = require('./helpers')
-const DefinePlugin = require('webpack/lib/DefinePlugin')
-const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
-const env = require('../environment/prod.env')
+const glob = require('glob'),
+    path = require('path'),
+    webpack = require('webpack'),
+    HtmlWebpackPlugin = require('html-webpack-plugin'),
+    CompressionPlugin = require('compression-webpack-plugin'),
+    ExtractTextPlugin = require('extract-text-webpack-plugin'),
+    UglifyJSPlugin = require('uglifyjs-webpack-plugin')
+    PurifyCSSPlugin = require('purifycss-webpack'),
+    FaviconsWebpackPlugin = require('favicons-webpack-plugin'),
+    autoprefixer = require('autoprefixer'),
+    webpackConfig = require('./webpack.config.base'),
+    helpers = require('./helpers'),
+    DefinePlugin = require('webpack/lib/DefinePlugin'),
+    env = require('../environment/prod.env');
 
+// Extract text from a bundle, or bundles, into a separate file.
+// https://github.com/webpack-contrib/extract-text-webpack-plugin
 const extractSass = new ExtractTextPlugin({
-  filename: 'css/[name].[contenthash].css',
-  disable: process.env.NODE_ENV === 'development'
-})
+    filename: 'css/[name].[contenthash].css',
+    disable: process.env.NODE_ENV === 'development'
+});
 
-webpackConfig.module.rules = [...webpackConfig.module.rules,
-  {
-    test: /\.scss$/,
-    use: extractSass.extract({
-      use: [{
-        loader: 'css-loader',
-        options: {
-          minimize: false,
-          sourceMap: false,
-          importLoaders: 2
-        }
-      },
-      {
-        loader: 'postcss-loader',
-        options: {
-          plugins: () => [autoprefixer],
-          sourceMap: false
-        }
-      },
-      {
-        loader: 'sass-loader',
-        options: {
-          sourceMap: false
-        }
-      }
-      ],
-      // use style-loader in development
-      fallback: 'style-loader'
-    })
-  },
-  {
-    test: /\.(jpg|png|gif)$/,
-    loader: 'file-loader',
-    options: {
-      regExp: /(img\/.*)/,
-      name: '[name].[ext]',
-      publicPath: '../',
-      outputPath: 'assets/img/'
+// Remove unused CSS with webpack.
+// https://github.com/webpack-contrib/purifycss-webpack
+const purifyCss = new PurifyCSSPlugin({
+    paths: glob.sync(path.join(__dirname, '../src/**/*.html')),
+    purifyOptions: {
+        info: true,
+        whitelist: []
     }
-  },
-  {
-    test: /\.(eot|svg|ttf|woff|woff2)$/,
-    loader: 'file-loader',
-    options: {
-      regExp: /(fonts\/.*)/,
-      name: '[name].[ext]',
-      publicPath: '../',
-      outputPath: 'fonts/'
-    }
-  }
-]
+});
 
-// ensure ts lint fails the build
-webpackConfig.module.rules[0].options = {
-  failOnHint: true
-}
-
-webpackConfig.plugins = [...webpackConfig.plugins,
-  new CommonsChunkPlugin({
-    name: 'vendor',
-    minChunks: function (module) {
-      return module.context && module.context.indexOf('node_modules') !== -1
-    }
-  }),
-  new CommonsChunkPlugin({
-    name: 'manifest',
-    minChunks: Infinity
-  }),
-  extractSass,
-  new OptimizeCssAssetsPlugin({
-    cssProcessor: require('cssnano'),
-    cssProcessorOptions: {
-      discardUnused: false,
-      discardComments: { removeAll: true }
-    },
-    canPrint: true
-  }),
-  new HtmlWebpackPlugin({
+// Simplifies creation of HTML files to serve your webpack bundles.
+// https://github.com/jantimon/html-webpack-plugin
+const htmlPlugin = new HtmlWebpackPlugin({
     inject: true,
     template: helpers.root('/src/index.html'),
     favicon: helpers.root('/src/favicon.ico'),
     minify: {
-      removeComments: true,
-      collapseWhitespace: true,
-      removeRedundantAttributes: true,
-      useShortDoctype: true,
-      removeEmptyAttributes: true,
-      removeStyleLinkTypeAttributes: true,
-      keepClosingSlash: true,
-      minifyJS: true,
-      minifyCSS: true,
-      minifyURLs: true
+        removeComments: true,
+        collapseWhitespace: true,
+        removeRedundantAttributes: true,
+        useShortDoctype: true,
+        removeEmptyAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        keepClosingSlash: true,
+        minifyJS: true,
+        minifyCSS: true,
+        minifyURLs: true
     }
-  }),
-  new UglifyJsPlugin({
-    include: /\.js$/,
-    minimize: true
-  }),
-  new CompressionPlugin({
-    asset: '[path].gz[query]',
-    test: /\.js$/
-  }),
-  new DefinePlugin({
-    'process.env': env
-  }),
-  new FaviconsWebpackPlugin(helpers.root('/src/icon.png'))
-]
+});
 
-module.exports = webpackConfig
+// Extract common modules shared between chunks.
+// https://webpack.js.org/plugins/commons-chunk-plugin/
+const commonsChunkPlugin = new webpack.optimize.CommonsChunkPlugin({
+    name: 'vendor',
+    minChunks: function (module, count) {
+        // any required modules inside node_modules are extracted to vendor
+        return (
+            module.resource &&
+            /\.js$/.test(module.resource) &&
+            module.resource.indexOf(
+                path.join(__dirname, '../node_modules')
+            ) === 0
+        )
+    }
+});
+
+webpackConfig.module.rules = [
+    ...webpackConfig.module.rules,
+    {
+        test: /\.scss$/,
+        use: extractSass.extract({
+            use: [
+                {
+                    loader: 'css-loader',
+                    options: {
+                        minimize: true,
+                        sourceMap: true,
+                        importLoaders: 2
+                    }
+                },
+                {
+                    loader: 'postcss-loader',
+                    options: {
+                        sourceMap: true,
+                        plugins: () => [autoprefixer]
+                    }
+                },
+                {
+                    loader: 'sass-loader',
+                    options: {
+                        outputStyle: 'expanded',
+                        sourceMap: true,
+                        sourceMapContents: true
+                    }
+                }
+            ],
+            fallback: 'style-loader' // use style-loader in development
+        })
+    },
+    {
+        test: /\.css$/,
+        use: [
+            { loader: 'style-loader' },
+            { loader: 'css-loader' },
+            { loader: 'sass-loader' }
+        ]
+    },
+    {
+        test: /\.(jpg|png|gif)$/,
+        loader: 'file-loader?name=assets/img/[name].[ext]'
+    },
+    {
+        test: /\.(eot|svg|ttf|woff|woff2)$/,
+        loader: 'file-loader?name=fonts/[name].[ext]'
+    },
+    {
+        test: /\.js$/, loader: 'babel-loader', exclude: /node_modules/, query: {
+            presets: ['es2015']
+        }
+    },
+    {
+        test: /\.vue$/,
+        loader: 'vue-loader',
+        options: {
+            // `vue-loader` options
+        }
+    }
+];
+
+// ensure ts lint fails the build.
+webpackConfig.module.rules[0].options = {
+    failOnHint: true
+};
+
+webpackConfig.plugins = [
+    ...webpackConfig.plugins,
+    extractSass,
+    purifyCss,
+    htmlPlugin,
+    commonsChunkPlugin,
+
+    // Since the vendor and manifest chunk use a different definition for minChunks,
+    // you need to invoke the plugin twice:
+    new webpack.optimize.CommonsChunkPlugin({
+        name: "manifest",
+        minChunks: Infinity
+    }),
+
+
+
+    // UglifyJS plugin for webpack.
+    // https://webpack.js.org/plugins/uglifyjs-webpack-plugin/
+
+    new UglifyJSPlugin({
+        exclude: /\.min\.js$/,
+        uglifyOptions: {
+            compress: true
+        }
+       // minimize: true
+    }),
+    // UglifyJSPlugin
+    // new webpack.optimize.UglifyJsPlugin({
+    //     exclude: /\.min\.js$/,
+    //     minimize: true
+    // }),
+
+    // Prepare compressed versions of assets to serve them with Content-Encoding.
+    // https://github.com/webpack-contrib/compression-webpack-plugin
+    new CompressionPlugin({
+        asset: '[path].gz[query]',
+        test: /\.min\.js$/
+    }),
+
+    // Allow global constants configured at compile time.
+    // https://webpack.js.org/plugins/define-plugin/
+    //new DefinePlugin({
+    //    'process.env': env
+    //}),
+
+    new webpack.DefinePlugin({
+        'process.env.NODE_ENV': JSON.stringify('production')
+    }),
+
+    // Allows to use the favicons generator with webpack.
+    // https://github.com/jantimon/favicons-webpack-plugin
+    new FaviconsWebpackPlugin(helpers.root('/src/icon.png'))
+];
+
+module.exports = webpackConfig;

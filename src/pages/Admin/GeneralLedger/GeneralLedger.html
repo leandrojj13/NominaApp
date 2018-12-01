@@ -14,7 +14,8 @@
                 <h3 class="h4">Asientos Contables</h3>
             </div>
             <div class="card-body">
-                <button class="btn btn-primary float-right" @click="goToGenerar()">Generar asiento contable del mes ({{currentMonth}})
+                <button class="btn btn-primary float-right" @click="goToGenerar()">Generar asiento contable del mes
+                    ({{currentMonth}})
                 </button>
                 <br>
                 <br>
@@ -29,6 +30,7 @@
                                 <th scope="col">Cantidad</th>
                                 <th scope="col">Tipo de movimiento</th>
                                 <th scope="col">Estado</th>
+                                <th scope="col">Acciones</th>
 
                             </tr>
                         </thead>
@@ -40,6 +42,9 @@
                                 <td>{{generalLedger.amount}}</td>
                                 <td>{{generalLedger.movementTypeName}}</td>
                                 <td>{{generalLedger.statusName}}</td>
+                                <td class="text-center">
+                                    <button class="btn btn-primary"  @click.stop="goToDetail(generalLedger)"> <span><i class="fa fa-eye"></i></span></button>
+                                </td>
                             </tr>
                         </tbody>
                         <tfoot v-if="!generalLedgers.length">

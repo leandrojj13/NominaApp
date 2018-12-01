@@ -9,12 +9,12 @@ import { GeneralLedgerModel } from '../../../Models/GeneralLedgerModel';
 export class GeneralLedger extends GenericPage<GeneralLedgerModel> {
 
     monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
     ];
 
     currentMonth = this.monthNames[new Date().getMonth()]
-  
-    generalLedgers= [];
+
+    generalLedgers = [];
     constructor() {
         super('', {
             name: {
@@ -36,7 +36,10 @@ export class GeneralLedger extends GenericPage<GeneralLedgerModel> {
         })
     }
 
-    goToGenerar(){
-        this.$router.push({ name: 'gldDetail', params: { mes: new Date().getMonth() + 1}} as any)
-      }
+    goToGenerar() {
+        this.$router.push({ name: 'gldDetail', params: { mes: new Date().getMonth() + 1 } } as any)
+    }
+    goToDetail(generalLedger) {
+        this.$router.push({ name: 'gldDetailView', params: { mes: new Date(generalLedger.date).getMonth() + 1, view: true} } as any)
+    }
 }

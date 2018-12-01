@@ -71,6 +71,12 @@ export const createRoutes: () => RouteConfig[] = () => [
     component: GeneralLedgerDetailPage
   },
   {
+    name: 'gldDetailView',
+    path: '/gld/:mes/:view',
+    component: GeneralLedgerDetailPage
+  },
+  {
+    name: 'gld',
     path: '/gld/',
     component: GeneralLedgerPage
   },
