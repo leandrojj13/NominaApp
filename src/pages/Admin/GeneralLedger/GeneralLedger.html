@@ -30,6 +30,8 @@
                                 <th scope="col">Cantidad</th>
                                 <th scope="col">Tipo de movimiento</th>
                                 <th scope="col">Estado</th>
+                                <th scope="col">Código externo </th>
+                                
                                 <th scope="col">Acciones</th>
 
                             </tr>
@@ -42,6 +44,7 @@
                                 <td>{{generalLedger.amount}}</td>
                                 <td>{{generalLedger.movementTypeName}}</td>
                                 <td>{{generalLedger.statusName}}</td>
+                                <td>{{generalLedger.externalId}}</td>
                                 <td class="text-center">
                                     <button class="btn btn-primary"  @click.stop="goToDetail(generalLedger)"> <span><i class="fa fa-eye"></i></span></button>
                                 </td>

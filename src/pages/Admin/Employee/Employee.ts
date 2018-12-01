@@ -35,6 +35,8 @@ export class Employee extends GenericPage<EmployeeModel> {
   saveData() {
     this.$validator.validateAll().then(isValid => {
       if (isValid) {
+        this.model.montSalary = Number.parseFloat(this.model.montSalary.toString()); 
+
         if (this.model.id) {
           axios.put(this.uri + '/' + this.model.id, this.model).then(() => {
             this.model = new EmployeeModel();
