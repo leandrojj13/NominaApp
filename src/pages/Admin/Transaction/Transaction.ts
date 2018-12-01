@@ -48,7 +48,8 @@ export class Transaction extends GenericPage<TransactionModel> {
 
     getEmpleados() {
         axios.get(this.baseUrl + "Employee").then((response) => {
-            this.employees = response.data
+            this.employees = response.data.filter(e => !e.disabled);
+          console.log(this.employees);
         }).catch(() => {
             alert("Error")
         })
