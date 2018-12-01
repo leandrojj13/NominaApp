@@ -32,7 +32,36 @@ export class Employee extends GenericPage<EmployeeModel> {
     })
   }
 
+  validIdentification() {
+    var cad = this.model.identification;
+    var total = 0;
+    var longitud = cad.length;
+    var longcheck = longitud - 1;
+
+    if (cad !== "" && longitud === 10) {
+      for (var i = 0; i < longcheck; i++) {
+        if (i % 2 === 0) {
+          var aux = cad.charAt(i) * 2;
+          if (aux > 9) aux -= 9;
+          total += aux;
+        } else {
+          total += parseInt(cad.charAt(i));
+        }
+      }
+
+      total = total % 10 ? 10 - total % 10 : 0;
+
+    }
+    
+    return cad.charAt(longitud - 1) == total;
+  }
+
   saveData() {
+    if(!this.validIdentification()) {
+      alert('Porfavor introduzca una cedula valida');
+      return false;
+    }
+
     this.$validator.validateAll().then(isValid => {
       if (isValid) {
         if (this.model.id) {
