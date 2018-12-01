@@ -25,50 +25,72 @@
                             <div class="form-group">
                                 <label class="form-control-label">Empleados </label>
                                 <multiselect v-model="model.employeeObj" deselect-label="No puedes remover" track-by="id"
+                                    name="Empleados" v-validate="'required'" :class="errors.has('Empleados') ? 'border-danger' : ''"
                                     label="name" placeholder="Selecciona" :options="employees" :searchable="false"
                                     :allow-empty="false">
                                     <template slot="singleLabel" slot-scope="{ option }"><strong>{{ option.name }}</strong>
                                         <strong> ({{ option.identification }})</strong></template>
                                 </multiselect>
+                                <span class="text-danger" v-show="errors.has('Empleados')">{{ errors.first('Empleados')
+                                    }}</span>
+
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label class="form-control-label">Tipo de transacción </label>
                                 <multiselect v-model="valueTipoTransaccion" deselect-label="No puedes remover" track-by="id"
+                                    name="Tipo de transacción" v-validate="'required'" :class="errors.has('Tipo de transacción') ? 'border-danger' : ''"
                                     label="name" placeholder="Selecciona" :options="optionsTipoTransaccion" :searchable="false"
                                     :allow-empty="false">
                                 </multiselect>
+                                <span class="text-danger" v-show="errors.has('Tipo de transacción')">{{
+                                    errors.first('Tipo de transacción') }}</span>
+
                             </div>
                         </div>
                         <div class="col-sm-6" v-if="valueTipoTransaccion && valueTipoTransaccion.id == 1">
                             <div class="form-group">
                                 <label class="form-control-label">Tipo de deducción </label>
                                 <multiselect v-model="model.deduccionObj" deselect-label="No puedes remover" track-by="id"
+                                    name="Tipo de deducción" v-validate="'required'" :class="errors.has('Tipo de deducción') ? 'border-danger' : ''"
                                     label="name" placeholder="Selecciona" :options="deducciones" :searchable="false"
                                     :allow-empty="false">
                                 </multiselect>
+                                <span class="text-danger" v-show="errors.has('Tipo de deducción')">{{
+                                    errors.first('Tipo de deducción') }}</span>
+
                             </div>
                         </div>
                         <div class="col-sm-6" v-else>
                             <div class="form-group">
                                 <label class="form-control-label">Tipo de entrada </label>
                                 <multiselect v-model="model.entradaObj" deselect-label="No puedes remover" track-by="id"
+                                    name="Tipo de entrada" v-validate="'required'" :class="errors.has('Tipo de entrada') ? 'border-danger' : ''"
                                     label="name" placeholder="Selecciona" :options="entradas" :searchable="false"
                                     :allow-empty="false">
                                 </multiselect>
+                                <span class="text-danger" v-show="errors.has('Tipo de entrada')">{{
+                                    errors.first('Tipode entrada') }}</span>
+
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label class="form-control-label">Fecha </label>
-                                <input type="date" v-model="model.date" class="form-control" />
+                                <input type="date" name="Fecha" v-validate="'required'" :class="errors.has('Fecha') ? 'border-danger' : ''"
+                                    v-model="model.date" class="form-control" />
+                                <span class="text-danger" v-show="errors.has('Fecha')">{{ errors.first('Fecha') }}</span>
+
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label class="form-control-label">Cantidad </label>
-                                <input type="number" v-model="model.amount" class="form-control" />
+                                <input type="number" name="Cantidad" v-validate="'required'" :class="errors.has('Cantidad') ? 'border-danger' : ''"
+                                    v-model="model.amount" class="form-control" />
+                                <span class="text-danger" v-show="errors.has('Cantidad')">{{ errors.first('Cantidad')
+                                    }}</span>
                             </div>
                         </div>
                     </div>
@@ -97,7 +119,7 @@
                 </div>
             </div>
             <div class="card-header d-flex align-items-center">
-                <h3 class="h4">Tipos de ingresos Agregados</h3>
+                <h3 class="h4">Transacciones</h3>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -105,27 +127,32 @@
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">Fecha</th>
+                                <th scope="col">Empleado</th>
+                                <th scope="col">Tipo transacción</th>
+                                <th scope="col">Tipo</th>
+                                <th scope="col">Cantidad</th>
                                 <th scope="col">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="(transaction, $index) in transactions">
                                 <th scope="row">{{$index + 1}}</th>
-                                <td>{{transaction.date}}</td>
-                                <td>@ <b-btn variant="info" size="sm" @click.stop="mapTransaction(transaction)">Editar</b-btn>
+                                <td>{{transaction.employee.name}} ({{transaction.employee.identification}}) </td>
+                                <td>{{transaction.type}}</td>
+                                <td>{{transaction.typeName}}</td>
+                                <td>{{transaction.amount}}</td>
+                                <td>
+                                    <b-btn variant="info" size="sm" @click.stop="mapTransaction(transaction)">Editar</b-btn>
                                     <b-btn variant="danger" size="sm" @click.stop="deleteData(transaction)">Borrar</b-btn>
                                 </td>
                             </tr>
                         </tbody>
+                        <tfoot v-if="!transactions.length">
+                            <tr class="text-center">
+                                <td colspan="6"><b>No hay registros</b></td>
+                            </tr>
+                        </tfoot>
                     </table>
-                    <!-- <b-table empty-text="No hay registros" empty-filtered-text="No hay registros coincidientes" show-empty striped hover :items="getTableInformation" :fields="fields">
-                  <template slot="acciones" slot-scope="cell">
-                    <b-btn variant="info" size="sm" @click.stop="editar(cell.item,cell.index,$event.target)">Editar</b-btn>
-                    <b-btn variant="danger" size="sm" @click.stop="borrar(cell.item,cell.index,$event.target)">Borrar</b-btn>
-                  </template>
-                  
-                </b-table> -->
                 </div>
             </div>
         </div>

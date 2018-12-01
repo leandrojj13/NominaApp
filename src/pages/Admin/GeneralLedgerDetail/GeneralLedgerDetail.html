@@ -1,0 +1,70 @@
+<div class="p-4">
+
+    <b-row>
+        <b-col cols="12">
+            <br>
+            <div class="card">
+                <div class="card-close">
+                    <div class="dropdown">
+                        <button type="button" id="closeCard2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                            class="dropdown-toggle"><i class="fa fa-ellipsis-v"></i></button>
+                        <div aria-labelledby="closeCard2" class="dropdown-menu dropdown-menu-right has-shadow"><a href="#"
+                                class="dropdown-item remove"> <i class="fa fa-times"></i>Close</a><a href="#" class="dropdown-item edit">
+                                <i class="fa fa-gear"></i>Edit</a></div>
+                    </div>
+                </div>
+                <div class="card-header d-flex align-items-center">
+                    <h3 class="h4">Procesar Asiento contable de la Nomina del mes de {{model.rosterMonthMonth}}</h3>
+                </div>
+                <br>
+                <div class="mr-5">
+                    <span class="float-right"> <b>Total de empleados afectados:</b> {{model.employeeTotalAfected}}</span>
+                    <br>
+                    <span class="float-right"> <b>Total de las entradas:</b> {{model.totalRosterEntryAmount}}</span>
+                    <br>
+                    <span class="float-right"> <b>Total de las deducciones:</b> {{model.totalRosterDeductionAmount }}</span>
+                    <br>
+
+                    <span class="float-right"> <b>Total:</b> {{model.totalRosterAmount  }}</span>
+                </div>
+                <div class="card-body">
+                    <h3>Detalle de nomina</h3>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Empleado</th>
+                                    <th scope="col">Deducciones</th>
+                                    <th scope="col">Entradas</th>
+                                    <th scope="col">Salario Bruto</th>
+                                    <th scope="col">Salario Neto</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(employee, $index) in model.employees">
+                                    <th scope="row">{{$index + 1}}</th>
+                                    <td>{{employee.employeeName}} ({{employee.employeeIdentification}}) </td>
+                                    <td>{{employee.deductionTotal}}</td>
+                                    <td>{{employee.entyTotal}}</td>
+                                    <td>{{employee.salaryBruto}}</td>
+                                    <td>{{employee.salaryNeto}}</td>
+                                </tr>
+                            </tbody>
+                            <tfoot v-if="!model.employees.length">
+                                <tr class="text-center">
+                                    <td colspan="6"><b>No hay registros</b></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                    </div>
+                    <br>
+                    <button class="btn btn-primary float-right">Procesar</button>
+                    <br>
+                    <br>
+                </div>
+            </div>
+        </b-col>
+    </b-row>
+</div>

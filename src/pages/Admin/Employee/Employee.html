@@ -24,31 +24,48 @@
             <div class="col-sm-6">
               <div class="form-group">
                 <label class="form-control-label">Nombre </label>
-                <input type="text" v-model="model.name" class="form-control">
+                <input type="text" name="Nombre" v-validate="'required'" :class="errors.has('Nombre') ? 'border-danger' : ''"
+                  v-model="model.name" class="form-control">
+                <span class="text-danger" v-show="errors.has('Nombre')">{{ errors.first('Nombre') }}</span>
               </div>
             </div>
             <div class="col-sm-6">
               <div class="form-group">
                 <label class="form-control-label">Identificación </label>
-                <input type="text" v-model="model.identification" class="form-control">
+                <input type="text" name="Identificación" v-validate="'required'" :class="errors.has('Identificación') ? 'border-danger' : ''"
+                  v-model="model.identification" class="form-control">
+                <span class="text-danger" v-show="errors.has('Identificación')">{{ errors.first('Identificación') }}</span>
               </div>
             </div>
             <div class="col-sm-6">
               <div class="form-group">
                 <label class="form-control-label">Departamento </label>
-                <input type="text" v-model="model.department" class="form-control">
+                <input type="text" name="Departamento" v-validate="'required'" :class="errors.has('Departamento') ? 'border-danger' : ''"
+                  v-model="model.department" class="form-control">
+                <span class="text-danger" v-show="errors.has('Departamento')">{{ errors.first('Departamento') }}</span>
               </div>
             </div>
             <div class="col-sm-6">
               <div class="form-group">
                 <label class="form-control-label">Puesto </label>
-                <input type="text" v-model="model.jobTitle" class="form-control">
+                <input type="text" name="Puesto" v-validate="'required'" :class="errors.has('Puesto') ? 'border-danger' : ''"
+                  v-model="model.jobTitle" class="form-control">
+                <span class="text-danger" v-show="errors.has('Puesto')">{{ errors.first('Puesto') }}</span>
               </div>
             </div>
             <div class="col-sm-6">
               <div class="form-group">
                 <label class="form-control-label">Salario </label>
-                <input type="number" v-model="model.montSalary" class="form-control">
+                <input type="number" name="Salario" v-validate="'required'" :class="errors.has('Salario') ? 'border-danger' : ''"
+                  v-model="model.montSalary" class="form-control">
+                <span class="text-danger" v-show="errors.has('Salario')">{{ errors.first('Salario') }}</span>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label class="form-control-label">¿Esta inactivo? </label>
+                <br>
+                <input type="checkbox" id="checkbox" v-model="model.disabled">
               </div>
             </div>
 
@@ -95,22 +112,23 @@
               <tr v-for="(employee, $index) in employees">
                 <th scope="row">{{$index + 1}}</th>
                 <td>{{employee.name}}</td>
+                <td>{{employee.identification}}</td>
                 <td>{{employee.department}}</td>
                 <td>{{employee.jobTitle}}</td>
                 <td>{{employee.montSalary}}</td>
-                <td>@ <b-btn variant="info" size="sm" @click.stop="mapEmployee(employee)">Editar</b-btn>
+                <td>
+                  <b-btn variant="info" size="sm" @click.stop="mapEmployee(employee)">Editar</b-btn>
                   <b-btn variant="danger" size="sm" @click.stop="deleteData(employee)">Borrar</b-btn>
                 </td>
               </tr>
             </tbody>
+            <tfoot v-if="!employees.length">
+              <tr class="text-center">
+                <td colspan="7"><b>No hay registros</b></td>
+              </tr>
+            </tfoot>
           </table>
-          <!-- <b-table empty-text="No hay registros" empty-filtered-text="No hay registros coincidientes" show-empty striped hover :items="getTableInformation" :fields="fields">
-              <template slot="acciones" slot-scope="cell">
-                <b-btn variant="info" size="sm" @click.stop="editar(cell.item,cell.index,$event.target)">Editar</b-btn>
-                <b-btn variant="danger" size="sm" @click.stop="borrar(cell.item,cell.index,$event.target)">Borrar</b-btn>
-              </template>
-              
-            </b-table> -->
+
         </div>
       </div>
     </div>

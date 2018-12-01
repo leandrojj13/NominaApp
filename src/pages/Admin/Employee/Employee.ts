@@ -15,7 +15,7 @@ export class Employee extends GenericPage<EmployeeModel> {
         label: 'Nombre',
         sortable: true
       },
-     
+
     }, EmployeeModel)
   }
 
@@ -33,31 +33,30 @@ export class Employee extends GenericPage<EmployeeModel> {
   }
 
   saveData() {
-    if (!this.model.name) {
-      alert("Favor completar el nombre")
+    this.$validator.validateAll().then(isValid => {
+      if (isValid) {
+        if (this.model.id) {
+          axios.put(this.uri + '/' + this.model.id, this.model).then(() => {
+            this.model = new EmployeeModel();
+            this.getData();
+            alert("Editado Correctamente")
+          }).catch(() => {
+            alert("Error")
+          })
 
-      return false;
-    }
-    if (this.model.id) {
-      axios.put(this.uri + '/' + this.model.id, this.model).then(() => {
-        this.model = new EmployeeModel();
-        this.getData();
-        alert("Editado Correctamente")
-      }).catch(() => {
-        alert("Error")
-      })
+        } else {
 
-    } else {
+          axios.post(this.uri, this.model).then((response) => {
+            alert('Guardaddo Correctamente');
+            this.getData();
+            this.model = new EmployeeModel();
 
-      axios.post(this.uri, this.model).then((response) => {
-        alert('Guardaddo Correctamente');
-        this.getData();
-        this.model = new EmployeeModel();
-
-      }).catch(() => {
-        alert("Error")
-      })
-    }
+          }).catch(() => {
+            alert("Error")
+          })
+        }
+      }
+    });
 
   }
 
@@ -66,7 +65,7 @@ export class Employee extends GenericPage<EmployeeModel> {
 
   }
 
-  cleanModel(){
+  cleanModel() {
     this.model = new EmployeeModel();
   }
 

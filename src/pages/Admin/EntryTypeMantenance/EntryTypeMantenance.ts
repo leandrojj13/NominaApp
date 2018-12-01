@@ -15,7 +15,7 @@ export class EntryTypeMantenance extends GenericPage<EntryTypeModel> {
         label: 'Nombre',
         sortable: true
       },
-     
+
     }, EntryTypeModel)
   }
 
@@ -33,31 +33,31 @@ export class EntryTypeMantenance extends GenericPage<EntryTypeModel> {
   }
 
   saveData() {
-    if (!this.model.name) {
-      alert("Favor completar el nombre")
-
-      return false;
-    }
-    if (this.model.id) {
-      axios.put(this.uri + '/' + this.model.id, this.model).then(() => {
-        this.model = new EntryTypeModel();
-        this.getData();
-        alert("Editado Correctamente")
-      }).catch(() => {
-        alert("Error")
-      })
-
-    } else {
-
-      axios.post(this.uri, this.model).then((response) => {
-        alert('Guardado Correctamente');
-        this.getData();
-        this.model = new EntryTypeModel();
-
-      }).catch(() => {
-        alert("Error")
-      })
-    }
+    this.$validator.validateAll().then(isValid => {
+      if (isValid) {
+        if (this.model.id) {
+          axios.put(this.uri + '/' + this.model.id, this.model).then(() => {
+            this.model = new EntryTypeModel();
+            this.getData();
+            alert("Editado Correctamente")
+          }).catch(() => {
+            alert("Error")
+          })
+    
+        } else {
+    
+          axios.post(this.uri, this.model).then((response) => {
+            alert('Guardado Correctamente');
+            this.getData();
+            this.model = new EntryTypeModel();
+    
+          }).catch(() => {
+            alert("Error")
+          })
+        }
+      }
+    });
+  
 
   }
 
@@ -66,7 +66,7 @@ export class EntryTypeMantenance extends GenericPage<EntryTypeModel> {
 
   }
 
-  cleanModel(){
+  cleanModel() {
     this.model = new EntryTypeModel();
   }
 

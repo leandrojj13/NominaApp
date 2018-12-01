@@ -33,32 +33,32 @@ export class DeductionType extends GenericPage<DeductionTypeModel> {
   }
 
   saveData() {
-    if (!this.model.name) {
-      alert("Favor completar el nombre")
-
-      return false;
-    }
-    if (this.model.id) {
-      axios.put(this.uri + '/' + this.model.id, this.model).then(() => {
-        this.model = new DeductionTypeModel();
-        this.getData();
-        alert("Editado Correctamente")
-      }).catch(() => {
-        alert("Error")
-      })
-
-    } else {
-
-      axios.post(this.uri, this.model).then((response) => {
-        alert('Guardaddo Correctamente');
-        this.getData();
-        this.model = new DeductionTypeModel();
-
-      }).catch(() => {
-        alert("Error")
-      })
-    }
-
+  
+    this.$validator.validateAll().then(isValid => {
+      if (isValid) {
+        if (this.model.id) {
+          axios.put(this.uri + '/' + this.model.id, this.model).then(() => {
+            this.model = new DeductionTypeModel();
+            this.getData();
+            alert("Editado Correctamente")
+          }).catch(() => {
+            alert("Error")
+          })
+    
+        } else {
+    
+          axios.post(this.uri, this.model).then((response) => {
+            alert('Guardaddo Correctamente');
+            this.getData();
+            this.model = new DeductionTypeModel();
+    
+          }).catch(() => {
+            alert("Error")
+          })
+        }
+      }
+    });
+    
   }
 
   mapDeductionType(entryType: DeductionTypeModel) {

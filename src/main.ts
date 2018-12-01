@@ -3,7 +3,8 @@ import { makeHot, reload } from './util/hot-reload'
 import { createRouter } from './router'
 import BootstrapVue from 'bootstrap-vue'
 import Multiselect from 'vue-multiselect'
-import VeeValidate from 'vee-validate';
+import VeeValidate, { Validator } from 'vee-validate';
+import VeeValidateEs from 'vee-validate/dist/locale/es';
 
 const navbarComponent = () => import('./components/navbar').then(({ NavbarComponent }) => NavbarComponent)
 const sideBarComponent = () => import('./components/sideBar').then(({ SideBarComponent }) => SideBarComponent)
@@ -33,7 +34,11 @@ if (process.env.ENV === 'development' && module.hot) {
 Vue.use(BootstrapVue)
 Vue.component('multiselect', Multiselect)
 
-Vue.use(VeeValidate);
+Validator.localize('es', VeeValidateEs);
+
+Vue.use(VeeValidate, {
+  locale: 'es',
+});
 
 // tslint:disable-next-line:no-unused-expression
 new Vue({

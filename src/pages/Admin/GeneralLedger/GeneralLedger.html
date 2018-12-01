@@ -1,0 +1,55 @@
+<b-row class="p-4">
+    <b-col cols="12">
+        <div class="card">
+            <div class="card-close">
+                <div class="dropdown">
+                    <button type="button" id="closeCard2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                        class="dropdown-toggle"><i class="fa fa-ellipsis-v"></i></button>
+                    <div aria-labelledby="closeCard2" class="dropdown-menu dropdown-menu-right has-shadow"><a href="#"
+                            class="dropdown-item remove"> <i class="fa fa-times"></i>Close</a><a href="#" class="dropdown-item edit">
+                            <i class="fa fa-gear"></i>Edit</a></div>
+                </div>
+            </div>
+            <div class="card-header d-flex align-items-center">
+                <h3 class="h4">Asientos Contables</h3>
+            </div>
+            <div class="card-body">
+                <button class="btn btn-primary float-right" @click="goToGenerar()">Generar asiento contable del mes ({{currentMonth}})
+                </button>
+                <br>
+                <br>
+                <br>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Fecha</th>
+                                <th scope="col">Descripción</th>
+                                <th scope="col">Cantidad</th>
+                                <th scope="col">Tipo de movimiento</th>
+                                <th scope="col">Estado</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(generalLedger, $index) in generalLedgers">
+                                <th scope="row">{{$index + 1}}</th>
+                                <td>{{generalLedger.date}}</td>
+                                <td>{{generalLedger.description}}</td>
+                                <td>{{generalLedger.amount}}</td>
+                                <td>{{generalLedger.movementTypeName}}</td>
+                                <td>{{generalLedger.statusName}}</td>
+                            </tr>
+                        </tbody>
+                        <tfoot v-if="!generalLedgers.length">
+                            <tr class="text-center">
+                                <td colspan="6"><b>No hay registros</b></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </b-col>
+</b-row>

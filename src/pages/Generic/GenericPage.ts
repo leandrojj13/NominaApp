@@ -4,13 +4,13 @@ export class  GenericPage<T> extends Vue {
 
   baseUrl = "https://integracion-opensource.azurewebsites.net/api/";
   uri= this.baseUrl;
-  fields: Object = {};
+  fields2: Object = {};
   items: Array<Object> = [];
   model: T 
   constructor(stringEndPoint, columnsDef, private modelType) {
     super()
     columnsDef.acciones = {};
-    this.fields = columnsDef
+    this.fields2 = columnsDef
     this.model = new modelType();
   }
 

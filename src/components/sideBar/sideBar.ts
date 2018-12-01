@@ -15,7 +15,8 @@ export class SideBarComponent extends Vue {
     new Link('Tipos de entradas', '/entryTpe','fa fa-university'),
     new Link('Tipos de deducciones', '/deductionType','fa fa-money'),
     new Link('Empleados', '/employee','fa fa-user'),
-    new Link('Transacciones', '/transactions','fa fa-mobile'),
+    new Link('Transacciones', '/transactions','fa fa-list'),
+    new Link('Asientos Contables', '/gld','fa fa-eye'),
     
     //new Link('Tipo Identificaciones', '/tipoIdentificaciones','fa fa-id-card-o'),
     //new Link('Posiciones de trabajo', '/posicionesTrabajo','fa fa-flag-checkered'),

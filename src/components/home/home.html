@@ -14,12 +14,15 @@
   <section class="dashboard-header">
     <div class="container-fluid">
       <div class="row">
-        <div class="statistics col-lg-3 col-12 ">
-          <div  class="statistic d-flex align-items-center bg-white has-shadow cursor-pointer">
+        <div class="statistics col-lg-3 col-12 " style="    margin: 0px auto;
+        margin-left: 31%;">
+        <button class="btn btn-primary" @click="goToGenerar()">Generar asiento contable del mes ({{currentMonth}}) </button>
+
+          <!-- <div  class="statistic d-flex align-items-center bg-white has-shadow cursor-pointer">
             
             <div class="icon bg-red"><i class="fa fa-building-o"></i></div>
             <div class="text"><strong>1</strong><br><small><router-link to="/barberias">Barberías</router-link></small></div>
-          </div>
+          </div> -->
           <!--<div class="statistic d-flex align-items-center bg-white has-shadow cursor-pointer">
             <div class="icon bg-green"><i class="fa fa-university"></i></div>
             <div class="text"><strong>2</strong><br><small><router-link to="/instituciones">Instituciones</router-link></small></div>

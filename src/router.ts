@@ -5,6 +5,8 @@ import { EntryTypeMantenance } from './pages/Admin/EntryTypeMantenance/EntryType
 import { DeductionType } from './pages/Admin/DeductionType/DeductionType';
 import { Employee } from './pages/Admin/Employee/Employee';
 import { Transaction } from './pages/Admin/Transaction/Transaction';
+import { GeneralLedgerDetail } from './pages/Admin/GeneralLedgerDetail/GeneralLedgerDetail';
+import { GeneralLedger } from './pages/Admin/GeneralLedger';
 
 const homeComponent = () => import('./components/home').then(({ HomeComponent }) => HomeComponent)
 const aboutComponent = () => import('./components/about').then(({ AboutComponent }) => AboutComponent)
@@ -16,6 +18,9 @@ const BarberShopMaintenance = () => import('./pages/Admin/').then(({  }) => Entr
 const DeductionTypePage = () => import('./pages/Admin/').then(({  }) => DeductionType)
 const EmployeePage = () => import('./pages/Admin/').then(({  }) => Employee)
 const TransactionPage = () => import('./pages/Admin/').then(({  }) => Transaction)
+const GeneralLedgerDetailPage = () => import('./pages/Admin/').then(({  }) => GeneralLedgerDetail)
+const GeneralLedgerPage = () => import('./pages/Admin/').then(({  }) => GeneralLedger)
+
 
 // const homeComponent = () => import(/* webpackChunkName: 'home' */'./components/home').then(({ HomeComponent }) => HomeComponent)
 // const aboutComponent = () => import(/* webpackChunkName: 'about' */'./components/about').then(({ AboutComponent }) => AboutComponent)
@@ -59,8 +64,16 @@ export const createRoutes: () => RouteConfig[] = () => [
   {
     path: '/transactions',
     component: TransactionPage
-  }
-  
+  },
+  {
+    name: 'gldDetail',
+    path: '/gld/:mes',
+    component: GeneralLedgerDetailPage
+  },
+  {
+    path: '/gld/',
+    component: GeneralLedgerPage
+  },
   
 ]
 

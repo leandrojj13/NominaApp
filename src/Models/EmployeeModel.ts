@@ -7,6 +7,7 @@ export class EmployeeModel extends BaseModel {
   jobTitle: string;
   montSalary: number;
   rosterId: number;
+  disabled: boolean;
 
   constructor() {
 
@@ -18,6 +19,7 @@ export class EmployeeModel extends BaseModel {
     this.jobTitle = null;
     this.montSalary = null;
     this.rosterId = null;
+    this.disabled = false;
   }
 
 }

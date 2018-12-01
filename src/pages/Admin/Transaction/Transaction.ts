@@ -14,11 +14,11 @@ export class Transaction extends GenericPage<TransactionModel> {
     transactions: Array<TransactionModel> = [];
     employees: Array<EmployeeModel> = [];
     deducciones: Array<DeductionTypeModel> = [];
-    entradas : Array<EntryTypeModel> = [];
+    entradas: Array<EntryTypeModel> = [];
     valueTipoTransaccion = null;
     optionsTipoTransaccion = [
-        { name: 'Deducción', id : 1 },
-        { name: 'Entrada', id: 2}
+        { name: 'Deducción', id: 1 },
+        { name: 'Entrada', id: 2 }
     ];
     constructor() {
         super('', {
@@ -38,7 +38,7 @@ export class Transaction extends GenericPage<TransactionModel> {
         this.getEntradas();
     }
 
-    getEntradas(){
+    getEntradas() {
         axios.get(this.baseUrl + "EntryType").then((response) => {
             this.entradas = response.data
         }).catch(() => {
@@ -46,7 +46,7 @@ export class Transaction extends GenericPage<TransactionModel> {
         })
     }
 
-    getEmpleados(){
+    getEmpleados() {
         axios.get(this.baseUrl + "Employee").then((response) => {
             this.employees = response.data
         }).catch(() => {
@@ -54,13 +54,13 @@ export class Transaction extends GenericPage<TransactionModel> {
         })
     }
 
-    getDeducciones(){
+    getDeducciones() {
         axios.get(this.baseUrl + "DeductionType").then((response) => {
             this.deducciones = response.data
         }).catch(() => {
             alert("Error")
         })
-        
+
     }
 
     getData() {
@@ -72,45 +72,50 @@ export class Transaction extends GenericPage<TransactionModel> {
     }
 
     saveData() {
-        this.model.employeeId = this.model.employeeObj.id;
 
-        if(this.valueTipoTransaccion && this.valueTipoTransaccion.id == 1){
-            this.model.deductionTypeId = this.model.deduccionObj ? this.model.deduccionObj.id : null;
-        }else{
-            this.model.entryTypeId = this.model.entradaObj ? this.model.entradaObj.id : null;
-        }
+        this.$validator.validateAll().then(isValid => {
+            if (isValid) {
 
-        if (this.model.id) {
-            axios.put(this.uri + '/' + this.model.id, this.model).then(() => {
-                this.model = new TransactionModel();
-                this.getData();
-                alert("Editado Correctamente")
-            }).catch(() => {
-                alert("Error")
-            })
+                this.model.employeeId = this.model.employeeObj.id;
 
-        } else {
+                if (this.valueTipoTransaccion && this.valueTipoTransaccion.id == 1) {
+                    this.model.deductionTypeId = this.model.deduccionObj ? this.model.deduccionObj.id : null;
+                } else {
+                    this.model.entryTypeId = this.model.entradaObj ? this.model.entradaObj.id : null;
+                }
 
-            axios.post(this.uri, this.model).then((response) => {
-                alert('Guardado Correctamente');
-                this.getData();
-                this.model = new TransactionModel();
+                if (this.model.id) {
+                    axios.put(this.uri + '/' + this.model.id, this.model).then(() => {
+                        this.model = new TransactionModel();
+                        this.getData();
+                        alert("Editado Correctamente")
+                    }).catch(() => {
+                        alert("Error")
+                    })
 
-            }).catch(() => {
-                alert("Error")
-            })
-        }
+                } else {
 
+                    axios.post(this.uri, this.model).then((response) => {
+                        alert('Guardado Correctamente');
+                        this.getData();
+                        this.model = new TransactionModel();
+
+                    }).catch(() => {
+                        alert("Error")
+                    })
+                }
+            }
+        });
     }
 
     mapTransaction(transaction: TransactionModel) {
         this.model = JSON.parse(JSON.stringify(transaction));
-        this.model.employeeObj = this.employees.filter(x=> x.id == transaction.employeeId)[0];
-        if(this.model.deductionTypeId){
-            this.model.deduccionObj = this.deducciones.filter(x=> x.id == transaction.deductionTypeId)[0];
+        this.model.employeeObj = this.employees.filter(x => x.id == transaction.employeeId)[0];
+        if (this.model.deductionTypeId) {
+            this.model.deduccionObj = this.deducciones.filter(x => x.id == transaction.deductionTypeId)[0];
             this.valueTipoTransaccion = this.optionsTipoTransaccion.filter(x => x.id == 1)[0];
-        }else{
-            this.model.entradaObj = this.entradas.filter(x=> x.id == transaction.entryTypeId)[0];
+        } else {
+            this.model.entradaObj = this.entradas.filter(x => x.id == transaction.entryTypeId)[0];
             this.valueTipoTransaccion = this.optionsTipoTransaccion.filter(x => x.id == 2)[0];
         }
 
