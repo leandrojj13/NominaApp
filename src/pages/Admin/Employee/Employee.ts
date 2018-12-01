@@ -1,5 +1,5 @@
-import { GenericPage, Component, Vue } from '../baseExporter'
-import { EmployeeModel } from '../../../Models/EmployeeModel'
+import {GenericPage, Component, Vue} from '../baseExporter'
+import {EmployeeModel} from '../../../Models/EmployeeModel'
 import axios from 'axios'
 
 @Component({
@@ -9,6 +9,7 @@ import axios from 'axios'
 export class Employee extends GenericPage<EmployeeModel> {
 
   employees: Array<EmployeeModel> = [];
+
   constructor() {
     super('', {
       name: {
@@ -33,31 +34,38 @@ export class Employee extends GenericPage<EmployeeModel> {
   }
 
   validIdentification() {
-    var cad = this.model.identification;
-    var total = 0;
-    var longitud = cad.length;
-    var longcheck = longitud - 1;
-
-    if (cad !== "" && longitud === 10) {
-      for (var i = 0; i < longcheck; i++) {
-        if (i % 2 === 0) {
-          var aux = cad.charAt(i) * 2;
-          if (aux > 9) aux -= 9;
-          total += aux;
-        } else {
-          total += parseInt(cad.charAt(i));
-        }
-      }
-
-      total = total % 10 ? 10 - total % 10 : 0;
-
+    var ced = this.model.identification;
+    var c = ced.replace(/-/g, '');
+    var cedula = c.substr(0, c.length - 1);
+    var verificador = c.substr(c.length - 1, 1);
+    var suma = 0;
+    var cedulaValida = 0;
+    if (ced.length < 11) {
+      return false;
     }
-    
-    return cad.charAt(longitud - 1) == total;
+    for (var i = 0; i < cedula.length; i++) {
+      var mod = "";
+      if ((i % 2) == 0) {
+        mod = 1
+      } else {
+        mod = 2
+      }
+      var res = cedula.substr(i, 1) * mod;
+      if (res > 9) {
+        res = res.toString();
+        var uno = res.substr(0, 1);
+        var dos = res.substr(1, 1);
+        res = eval(uno) + eval(dos);
+      }
+      suma += eval(res);
+    }
+    var el_numero = (10 - (suma % 10)) % 10;
+
+    return el_numero == verificador && cedula.substr(0, 3) != "000";
   }
 
   saveData() {
-    if(!this.validIdentification()) {
+    if (!this.validIdentification()) {
       alert('Porfavor introduzca una cedula valida');
       return false;
     }
